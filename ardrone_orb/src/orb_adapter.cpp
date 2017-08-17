@@ -68,7 +68,7 @@
 
 #include<opencv2/core/core.hpp>
 
-#include <System.h>
+#include "System.h"
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
@@ -113,7 +113,8 @@ int main ( int argc, char **argv ) {
         if ( igb.pc_init_  && counter % 30 == 0 ) {
             pointcloud_pub.publish ( igb.pc_ ); //publish at 1 Hz
         }
-
+		cout << "init:"<< igb.pose_init_ << endl;
+		cout <<"state:"<< igb.tracking_state_ << endl;
         if ( igb.pose_init_ && igb.tracking_state_ == 2 ) {
             pose_unscaled_pub.publish ( igb.pose_out_unscaled_ );
             pose_scaled_pub.publish ( igb.pose_out_scaled_ );

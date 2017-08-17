@@ -52,7 +52,7 @@ double ScaleEstimator::filterScale ( vector<ScaleStruct> scale_vctr, double rati
             counter_++;
         }
     }
-
+	
 
     if ( counter_ > cut_off ) {
         string info = "Scale converged to " + to_string ( scale_ );
@@ -81,8 +81,9 @@ void ScaleEstimator::processQueue() {
     den[0]=filter_pole_ * filter_pole_;
     den[1]=filter_pole_ + filter_pole_;
     den[2]=1;
-
+	
     while ( not orb_data_queue_.empty() ) {
+	  cout << "orb_data_queue_:true" << endl;
 
         // get first orb msg
         geometry_msgs::PoseStamped orb_msg = orb_data_queue_.back();
@@ -96,8 +97,10 @@ void ScaleEstimator::processQueue() {
             orb_z_ = shared_ptr<LTI::SisoSystem> ( new LTI::SisoSystem ( num,den, t_orb, 0.00005 ) );
         }
 
-
+		
         while ( not nav_data_queue_.empty() )  {
+		  cout << "nav_data_queue_:true" << endl;
+		  // 最新のnav時刻を取得
             double t_nav = nav_data_queue_.back().header.stamp.toSec();
 
             if ( t_nav > t_orb ) break;
@@ -110,12 +113,13 @@ void ScaleEstimator::processQueue() {
                 nav_z_ = shared_ptr<LTI::SisoSystem> ( new LTI::SisoSystem ( num,den, t_nav, 0.00005 ) );
             }
 
-            double alt = nav_msg.altd / 1000.0;
-            nav_z_->timeStep ( t_nav, alt );
+            double alt = nav_msg.altd / 1000.0; // 高度mm->m
+			cout << "altitude:" << alt << endl;
+            nav_z_->timeStep ( t_nav, alt );//時刻と高度を保持
         }
 
         orb_z_->timeStep ( t_orb, orb_msg.pose.position.z );
-
+		//cout << "" << endl;
         if (not first_nav_msg_ and not first_orb_msg_) {
             orb_signal_ = orb_z_->getOutput ( t_orb );
             nav_signal_ = nav_z_->getOutput ( t_orb );

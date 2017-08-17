@@ -88,7 +88,7 @@ void ImageGrabber::grabImage ( const sensor_msgs::ImageConstPtr &msg ) {
             pc_init_ = true;
             normalizer_ = getAverageDepth();
         }
-        
+ 
         //upon initialization, a correction 
         if ( not pose_init_ ) {
             initializeTFTree ( Tcw );
@@ -146,7 +146,7 @@ void ImageGrabber::grabImage ( const sensor_msgs::ImageConstPtr &msg ) {
             // TODO: make efficient (use mpSLAM->GetTrackedMapPoints() to get most recent points)
             pc_.points.clear();
             pc_.header.stamp = t;
-
+			//cout << point_cloud.size() << endl;
             for ( size_t i = 0; i < point_cloud.size(); i++ ) {
                 if ( point_cloud[i]->isBad() /* or spRefMPs.count(vpMPs[i])*/ ) {
                     continue;
@@ -156,7 +156,7 @@ void ImageGrabber::grabImage ( const sensor_msgs::ImageConstPtr &msg ) {
                 pp.x = pos.at<float> ( 0 ) / ( scale_ * normalizer_ );
                 pp.y = pos.at<float> ( 1 ) / ( scale_ * normalizer_ );
                 pp.z = pos.at<float> ( 2 ) / ( scale_ * normalizer_ );
-
+				//cout << pos << endl;
                 pc_.points.push_back ( pp );
             }
         }
@@ -215,6 +215,7 @@ double ImageGrabber::getAverageDepth () {
     }
 
     float out = tot_z / counter;
+	return tot_z / counter;
 }
 
 void ImageGrabber::setScale ( std_msgs::Float32 msg ) {

@@ -71,7 +71,7 @@ public:
     double filterScale ( vector<ScaleStruct> scale_vctr, double ratio, double std_orb, double std_nav , int cut_off );
     void estimateScale();
     void processQueue();
-    void orbCallback(geometry_msgs::PoseStamped msg) {orb_data_queue_.push_front ( msg );};
+    void orbCallback(geometry_msgs::PoseStamped msg) {cout<<orb_data_queue_.size()<<endl;orb_data_queue_.push_front ( msg );};
     void navCallback(ardrone_autonomy::Navdata msg) {nav_data_queue_.push_front ( msg );};
     bool hasFixedScale() {return fixed_scale_;};
     double getScale() {return scale_;};

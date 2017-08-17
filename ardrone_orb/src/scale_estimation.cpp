@@ -27,6 +27,8 @@
 
 #include <scale_estimator.h>
 
+using namespace std;
+
 int main ( int argc, char **argv ) {
     ros::init ( argc, argv, "scale_estimator" );
     ros::NodeHandle nh;
@@ -52,10 +54,11 @@ int main ( int argc, char **argv ) {
     while ( ros::ok() ) {
 
         ros::spinOnce();
-        if ( not scale_est.hasFixedScale() ) {
+        if ( not scale_est.hasFixedScale() ) {// scaleが定まるまで
             scale_est.processQueue();//doesn't do anything if queue size less than 50
             scale_est.estimateScale();
         } else {
+		  cout << "222" << endl;
             std_msgs::Float32 scale_for_publish;
             scale_for_publish.data = scale_est.getScale();
             scale_pub.publish ( scale_for_publish );

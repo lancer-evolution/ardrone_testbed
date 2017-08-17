@@ -104,12 +104,12 @@ namespace LTI{
       
       //Put into canonical form
       if(_den.size()<2){
-        printf ("\n ERROR: Trying to create a static system\n");
+        printf ("\n ERROR: Trying to create a static system\n");// 分母の次数が0
         exit (EXIT_FAILURE);
       }
       if(_den.size()<=_num.size())
       {
-        printf ("\n ERROR: Trying to create an non-strictly proper transfer function\n");
+        printf ("\n ERROR: Trying to create an non-strictly proper transfer function\n");// 分子の次数が高いとき
         exit (EXIT_FAILURE);
       }
       
@@ -120,13 +120,15 @@ namespace LTI{
     
     //This updates the system when a new input is recieved
     void timeStep(const double& t_now, const double& u_now){
-      
+      // 時刻のズレを検出
       if(t_now < time){printf("WARNING: time request is in the past \n");}
       if(t_now==time){return;}
       
       //stuff for numerical integration
-      double num_steps=ceil((t_now-time)/max_time_step);
+      double num_steps=ceil((t_now-time)/max_time_step);// 小数点以下切り上げ
       double dt=(t_now-time)/num_steps;
+	  cout << max_time_step << endl;
+	  cout << num_steps << endl;
       //Euler integration on controllable canonical form with first order hold
       for(int j=0;j<num_steps;j++){
         //x[k+1] = x[k] + (A*dt)x[k]
